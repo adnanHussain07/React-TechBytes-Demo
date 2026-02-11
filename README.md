@@ -51,4 +51,5 @@ This application is structured around six core concepts, each with its own inter
 - **State & Hooks (`/state-hooks`)**: Examples of `useState`, custom hooks (`useToggle`), and the `useReducer` pattern for complex state logic.
 - **Async UI/UX (`/async-ux`)**: Showcases loading, error, retry states, and optimistic updates for a task management feature, powered by MSW and TanStack Query. Includes a network simulator to control latency and failure rates.
 - **Project Workflow (`/workflow`)**: Details the feature-first project structure, and the tooling workflow covering linting, formatting, testing, and Continuous Integration.
+- **Legacy vs Modern (`/legacy-vs-modern`)**: A split-screen comparison of a "Legacy" Class Component with spaghetti state vs. a "Modern" Functional Component using Custom Hooks and Context.
 - **Performance (`/performance`)**: Discusses render awareness, `React.memo`, `useCallback`, `useMemo`, and practical tips for optimizing React application performance.

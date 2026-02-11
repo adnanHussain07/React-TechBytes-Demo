@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import Home from './pages/Home';
 import MentalModel from './pages/MentalModel';
+import LegacyVsModern from './pages/LegacyVsModern';
 import Composition from './pages/Composition';
 import StateHooks from './pages/StateHooks';
 import AsyncUX from './pages/AsyncUX';
@@ -19,6 +20,7 @@ function App() {
         <Route path="/async-ux" element={<AsyncUX />} />
         <Route path="/workflow" element={<Workflow />} />
         <Route path="/performance" element={<Performance />} />
+        <Route path="/legacy-vs-modern" element={<LegacyVsModern />} />
       </Routes>
     </Layout>
   );

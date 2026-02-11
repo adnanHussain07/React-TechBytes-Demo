@@ -6,7 +6,8 @@ import {
     Database,
     Zap,
     GitBranch,
-    Activity
+    Activity,
+    Code2
 } from 'lucide-react';
 import logo from '../../assets/TDSecondBlue.png';
 
@@ -22,6 +23,7 @@ const Sidebar = () => {
         { path: '/async-ux', label: 'Async UX', icon: Zap },
         { path: '/workflow', label: 'Workflow', icon: GitBranch },
         { path: '/performance', label: 'Performance', icon: Activity },
+        { path: '/legacy-vs-modern', label: 'Legacy vs Modern', icon: Code2 },
     ];
 
     return (
