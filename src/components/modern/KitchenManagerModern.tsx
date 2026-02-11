@@ -1,7 +1,8 @@
 import { useActionState } from 'react';
 import { useMenu } from '../../hooks/useMenu';
 import { useOrder } from '../../context/OrderContext';
-import { PlusCircle, Trash2, Loader2 } from 'lucide-react';
+import { PlusCircle, Trash2, Loader2, Sparkles } from 'lucide-react';
+import { withLogger } from '../../hocs/withLogger';
 
 // Mock Server Action
 async function addItemToMenu(previousState: any, formData: FormData) {
@@ -28,9 +29,12 @@ async function addItemToMenu(previousState: any, formData: FormData) {
     };
 }
 
-const KitchenManagerModern = () => {
+const KitchenManagerModernBase = (props: any) => {
     const { menuItems, isLoading } = useMenu();
     const { orders, addOrder, removeOrder, totalRevenue } = useOrder();
+
+    // Check if HOC props are present
+    const isHocEnhanced = props._hocMeta?.enabled;
 
     // React 19 useActionState Hook
     const [formState, formAction, isPending] = useActionState(addItemToMenu, null);
@@ -45,11 +49,16 @@ const KitchenManagerModern = () => {
 
     return (
         <div className="p-6 bg-card rounded-lg border border-border shadow-sm">
-            <h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-primary">
+            <h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-primary flex-wrap">
                 <span>✅ Modern Kitchen Manager</span>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                     <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-normal">Hooks + Context</span>
                     <span className="text-xs bg-green-500/10 text-green-600 px-2 py-0.5 rounded-full font-normal">useActionState (R19)</span>
+                    {isHocEnhanced && (
+                        <span className="text-xs bg-purple-500/10 text-purple-600 px-2 py-0.5 rounded-full font-normal flex items-center gap-1">
+                            <Sparkles size={10} /> HOC Enhanced
+                        </span>
+                    )}
                 </div>
             </h2>
 
@@ -169,5 +178,8 @@ const KitchenManagerModern = () => {
         </div>
     );
 };
+
+// Wrap with HOC before exporting
+const KitchenManagerModern = withLogger(KitchenManagerModernBase, 'KitchenManagerModern');
 
 export default KitchenManagerModern;
