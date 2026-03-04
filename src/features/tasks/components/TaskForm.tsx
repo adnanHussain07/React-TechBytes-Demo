@@ -22,9 +22,10 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAddTask }) => {
         value={taskTitle}
         onChange={(e) => setTaskTitle(e.target.value)}
         placeholder="Add a new task"
+        data-uiid="tasks.form.input"
         style={{ marginRight: '8px', padding: '8px' }}
       />
-      <button type="submit">Add Task</button>
+      <button type="submit" data-uiid="tasks.form.submit">Add Task</button>
     </form>
   );
 };

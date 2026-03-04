@@ -9,7 +9,15 @@ import AsyncUX from './pages/AsyncUX';
 import Workflow from './pages/Workflow';
 import Performance from './pages/Performance';
 
+// Adaptive UI
+import { useTelemetry } from './features/adaptive-ui/telemetry/useTelemetry';
+import AdaptiveUiLayout from './features/adaptive-ui/components/AdaptiveUiLayout';
+import AdaptiveUiHomePage from './features/adaptive-ui/pages/AdaptiveUiHomePage';
+import AdaptiveUiInsightsPage from './features/adaptive-ui/pages/AdaptiveUiInsightsPage';
+
 function App() {
+  useTelemetry();
+
   return (
     <Layout>
       <Routes>
@@ -21,6 +29,11 @@ function App() {
         <Route path="/workflow" element={<Workflow />} />
         <Route path="/performance" element={<Performance />} />
         <Route path="/legacy-vs-modern" element={<LegacyVsModern />} />
+        
+        <Route path="/adaptive-ui" element={<AdaptiveUiLayout />}>
+          <Route index element={<AdaptiveUiHomePage />} />
+          <Route path="insights" element={<AdaptiveUiInsightsPage />} />
+        </Route>
       </Routes>
     </Layout>
   );

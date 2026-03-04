@@ -11,7 +11,7 @@ describe('App Router', () => {
     );
 
     // Expect to see content from the Home component
-    expect(screen.getByText(/home - react city map/i)).toBeInTheDocument();
+    expect(screen.getByText(/home - reac modern flow/i)).toBeInTheDocument();
     expect(screen.getByText(/welcome to the modern react techbytes demo!/i)).toBeInTheDocument();
   });
 

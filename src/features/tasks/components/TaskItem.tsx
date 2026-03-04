@@ -15,6 +15,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle, onDelete }) => {
         checked={task.completed}
         onChange={() => onToggle(task.id)}
         id={`task-${task.id}`}
+        data-uiid="tasks.item.toggle"
         style={{ marginRight: '8px' }}
       />
       <label
@@ -23,7 +24,11 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle, onDelete }) => {
       >
         {task.title}
       </label>
-      <button onClick={() => onDelete(task.id)} style={{ marginLeft: '16px' }}>
+      <button 
+        onClick={() => onDelete(task.id)} 
+        style={{ marginLeft: '16px' }}
+        data-uiid="tasks.item.delete"
+      >
         Delete
       </button>
     </div>

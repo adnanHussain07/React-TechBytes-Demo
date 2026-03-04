@@ -5,7 +5,7 @@ import { PlusCircle, Trash2, Loader2, Sparkles } from 'lucide-react';
 import { withLogger } from '../../hocs/withLogger';
 
 // Mock Server Action
-async function addItemToMenu(previousState: any, formData: FormData) {
+async function addItemToMenu(_previousState: any, formData: FormData) {
     const name = formData.get('name') as string;
     const price = formData.get('price') as string;
 

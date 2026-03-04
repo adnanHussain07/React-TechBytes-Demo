@@ -24,6 +24,7 @@ const Sidebar = () => {
         { path: '/workflow', label: 'Workflow', icon: GitBranch },
         { path: '/performance', label: 'Performance', icon: Activity },
         { path: '/legacy-vs-modern', label: 'Legacy vs Modern', icon: Code2 },
+        { path: '/adaptive-ui', label: 'Adaptive UI', icon: Zap },
     ];
 
     return (
@@ -44,6 +45,7 @@ const Sidebar = () => {
                         <Link
                             key={item.path}
                             to={item.path}
+                            data-uiid={`nav.${item.path.replace(/^\//, '') || 'home'}`}
                             className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive(item.path)
                                 ? 'bg-primary text-primary-foreground font-medium'
                                 : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
