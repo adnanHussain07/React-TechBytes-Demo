@@ -11,15 +11,18 @@ import Performance from './pages/Performance';
 
 // Adaptive UI
 import { useTelemetry } from './features/adaptive-ui/telemetry/useTelemetry';
+import { AdaptiveUiProvider } from './features/adaptive-ui/runtime/AdaptiveUiProvider';
+import HintOverlay from './features/adaptive-ui/components/HintOverlay';
 import AdaptiveUiLayout from './features/adaptive-ui/components/AdaptiveUiLayout';
 import AdaptiveUiHomePage from './features/adaptive-ui/pages/AdaptiveUiHomePage';
 import AdaptiveUiInsightsPage from './features/adaptive-ui/pages/AdaptiveUiInsightsPage';
 
-function App() {
+function AppContent() {
   useTelemetry();
 
   return (
     <Layout>
+      <HintOverlay />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/mental-model" element={<MentalModel />} />
@@ -36,6 +39,14 @@ function App() {
         </Route>
       </Routes>
     </Layout>
+  );
+}
+
+function App() {
+  return (
+    <AdaptiveUiProvider>
+      <AppContent />
+    </AdaptiveUiProvider>
   );
 }
 

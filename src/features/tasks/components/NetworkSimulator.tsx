@@ -28,6 +28,7 @@ const NetworkSimulator: React.FC = () => {
           <select
             value={settings.latency}
             onChange={handleLatencyChange}
+            data-uiid="tasks.sim.latency"
             style={{ marginLeft: '8px' }}
           >
             <option value={0}>0ms</option>
@@ -41,6 +42,7 @@ const NetworkSimulator: React.FC = () => {
           <select
             value={settings.failureRate}
             onChange={handleFailureRateChange}
+            data-uiid="tasks.sim.failure"
             style={{ marginLeft: '8px' }}
           >
             <option value={0}>0%</option>
