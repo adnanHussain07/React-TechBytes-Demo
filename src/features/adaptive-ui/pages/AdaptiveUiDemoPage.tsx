@@ -71,7 +71,7 @@ const AdaptiveUiDemoPage = () => {
               </button>
             </div>
           </div>
-          
+
           <div className="pt-4 border-t border-border">
             <p className="text-sm font-medium text-muted-foreground mb-2">Status Summary</p>
             <div className="flex gap-4 text-xs font-mono">
@@ -125,30 +125,30 @@ const AdaptiveUiDemoPage = () => {
       <div className="bg-card border border-border rounded-2xl p-8 shadow-sm">
         <h2 className="text-xl font-semibold mb-6">🎙️ Presenter Script</h2>
         <div className="space-y-6">
-          <Step 
-            num="1" 
-            title="Seed Novice Data" 
+          <Step
+            num="1"
+            title="Seed Novice Data"
             desc="Click 'Seed Novice Scenario'. This simulates a user who stays on Home and visits Tasks but never adds anything."
           />
-          <Step 
-            num="2" 
-            title="Demonstrate Discovery" 
+          <Step
+            num="2"
+            title="Demonstrate Discovery"
             desc="Navigate to Home. Point out the pulse highlight on 'Async UX'. Then go to Tasks and see the tooltip on 'Add Task'."
           />
-          <Step 
-            num="3" 
-            title="Accept the Hint" 
+          <Step
+            num="3"
+            title="Accept the Hint"
             desc="Click 'Add Task'. The agent logs this as an 'accepted' hint."
           />
-          <Step 
-            num="4" 
-            title="Show the Brain" 
-            desc="Go to Insights. Show the event logs and the Rule Engine explaining 'why' the hints appeared."
+          <Step
+            num="4"
+            title="Check the Brain"
+            desc="Go to Insights. The event logs and the Rule Engine explaining 'why' the hints appeared."
           />
-          <Step 
-            num="5" 
-            title="Advanced ML (Power User)" 
-            desc="Seed Power-User data. Show the Evaluation page for A/B metrics, and demonstrate the ML next-action prediction."
+          <Step
+            num="5"
+            title="Advanced ML (Power User)"
+            desc="Seed Power-User data. Check the Evaluation page for A/B metrics, and demonstrate the ML next-action prediction."
           />
         </div>
       </div>
