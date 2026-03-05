@@ -1,8 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { AdaptiveUiSettings, TelemetryEvent } from '../types';
 import { getSettings, listEvents, getUserId } from '../storage/eventStore';
 import { listDismissed, dismissHint as storeDismissHint } from '../storage/dismissedStore';
+import { appendHintEvent } from '../storage/evaluationStore';
+import { updateTransitionModel } from '../ml/transitionModel';
 import { buildUserModel } from '../analytics/buildUserModel';
 import { evaluateRules } from '../rules/evaluateRules';
 import { Hint } from '../rules/ruleTypes';
@@ -23,18 +25,26 @@ export const AdaptiveUiProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [events, setEvents] = useState<TelemetryEvent[]>([]);
   const [dismissed, setDismissed] = useState<Record<string, number>>({});
   const [activeHints, setActiveHints] = useState<Hint[]>([]);
+  
+  const lastShownHints = useRef<Set<string>>(new Set());
 
   const loadData = useCallback(() => {
     const currentUserId = getUserId();
     const currentSettings = getSettings();
     setUserId(currentUserId);
     setSettings(currentSettings);
-    setEvents(listEvents(currentUserId));
+    const evts = listEvents(currentUserId);
+    setEvents(evts);
     setDismissed(listDismissed(currentUserId));
+    
+    // Update ML model on data load
+    if (evts.length > 0) {
+      updateTransitionModel(currentUserId, evts);
+    }
   }, []);
 
   const recomputeHints = useCallback(() => {
-    if (!settings.enabled) {
+    if (!settings.enabled || (settings.abVariant === 'B')) {
       setActiveHints([]);
       return;
     }
@@ -47,30 +57,78 @@ export const AdaptiveUiProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       settings,
       dismissedHints: dismissed,
     });
+    
+    // Log "shown" events for new hints
+    hints.forEach(hint => {
+      if (!lastShownHints.current.has(hint.hintId)) {
+        appendHintEvent(userId, {
+          hintId: hint.hintId,
+          ts: Date.now(),
+          type: 'shown',
+          targetUiId: hint.targetUiId,
+          userId
+        });
+        lastShownHints.current.add(hint.hintId);
+      }
+    });
+
     setActiveHints(hints);
-  }, [location.pathname, events, settings, dismissed]);
+  }, [location.pathname, events, settings, dismissed, userId]);
 
   useEffect(() => {
     loadData();
-    // Also listen for potential storage changes or custom events if needed
     const handleRefresh = () => loadData();
     window.addEventListener('adaptive-ui-refresh', handleRefresh);
-    return () => window.removeEventListener('adaptive-ui-refresh', handleRefresh);
-  }, [loadData]);
+    
+    // Global click listener for "accepted" detection
+    const handleGlobalClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const uiId = target.closest('[data-uiid]')?.getAttribute('data-uiid');
+      
+      if (uiId) {
+        // Find if this UI ID was a target of an active hint
+        const acceptedHint = activeHints.find(h => h.targetUiId === uiId);
+        if (acceptedHint) {
+          appendHintEvent(userId, {
+            hintId: acceptedHint.hintId,
+            ts: Date.now(),
+            type: 'accepted',
+            targetUiId: uiId,
+            userId
+          });
+        }
+      }
+    };
+    
+    document.addEventListener('click', handleGlobalClick, true);
+
+    return () => {
+      window.removeEventListener('adaptive-ui-refresh', handleRefresh);
+      document.removeEventListener('click', handleGlobalClick, true);
+    };
+  }, [loadData, activeHints, userId]);
 
   useEffect(() => {
-    // Debounce recomputation slightly if many events fire
     const timer = setTimeout(recomputeHints, 300);
     return () => clearTimeout(timer);
   }, [recomputeHints]);
 
-  // Handle dismissal
   const dismissHint = useCallback((hintId: string) => {
+    const hint = activeHints.find(h => h.hintId === hintId);
     storeDismissHint(userId, hintId);
     setDismissed(listDismissed(userId));
-    // Immediately remove from active hints for better UX
     setActiveHints(prev => prev.filter(h => h.hintId !== hintId));
-  }, [userId]);
+    
+    if (hint) {
+      appendHintEvent(userId, {
+        hintId,
+        ts: Date.now(),
+        type: 'dismissed',
+        targetUiId: hint.targetUiId,
+        userId
+      });
+    }
+  }, [userId, activeHints]);
 
   const value = useMemo(() => ({
     activeHints,

@@ -1,5 +1,8 @@
-import { useState } from 'react';
-import { getSettings, saveSettings, clearEvents, exportEvents, importEvents, getUserId } from '../storage/eventStore';
+import React, { useState } from 'react';
+import { getSettings, saveSettings, clearEvents, getUserId } from '../storage/eventStore';
+import { exportAllData, importAllData, clearHintEvents } from '../storage/evaluationStore';
+import { clearDismissed } from '../storage/dismissedStore';
+import { clearTransitionModel } from '../ml/transitionModel';
 import { AdaptiveUiSettings } from '../types';
 
 const TelemetryControls = () => {
@@ -19,35 +22,38 @@ const TelemetryControls = () => {
   };
 
   const handleClear = () => {
-    if (confirm('Are you sure you want to clear all events for the current user?')) {
+    if (confirm('Are you sure you want to clear ALL data for the current user?')) {
       clearEvents(userId);
-      window.location.reload(); // Simple way to refresh data in other components
+      clearHintEvents(userId);
+      clearDismissed(userId);
+      clearTransitionModel(userId);
+      window.location.reload();
     }
   };
 
-  const handleExport = () => {
-    const data = exportEvents(userId);
+  const handleExportAll = () => {
+    const data = exportAllData(userId);
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `adaptive-ui-events-${userId}-${Date.now()}.json`;
+    a.download = `adaptive-ui-full-export-${userId}-${Date.now()}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
 
-  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImportAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onload = (event) => {
       const content = event.target?.result as string;
-      if (importEvents(userId, content)) {
-        alert('Events imported successfully!');
+      if (importAllData(userId, content)) {
+        alert('All data imported successfully!');
         window.location.reload();
       } else {
-        alert('Failed to import events. Check the file format.');
+        alert('Failed to import data.');
       }
     };
     reader.readAsText(file);
@@ -55,14 +61,14 @@ const TelemetryControls = () => {
 
   return (
     <div className="bg-card border border-border rounded-xl p-6 shadow-sm space-y-6">
-      <h3 className="text-lg font-semibold">Telemetry Controls</h3>
+      <h3 className="text-lg font-semibold">System Controls</h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <label className="text-sm font-medium">Enable Telemetry</label>
-              <p className="text-xs text-muted-foreground">Master switch for interaction capture</p>
+              <label className="text-sm font-medium">Enable Adaptive UI</label>
+              <p className="text-xs text-muted-foreground">Master switch for interaction capture and hints</p>
             </div>
             <button
               onClick={handleToggleEnabled}
@@ -102,20 +108,20 @@ const TelemetryControls = () => {
         <div className="space-y-4">
           <div className="flex flex-wrap gap-2">
             <button
-              onClick={handleExport}
-              className="px-4 py-2 text-sm font-medium bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition-colors"
+              onClick={handleExportAll}
+              className="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
             >
-              Export Data
+              Export All Data
             </button>
             <label className="px-4 py-2 text-sm font-medium bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition-colors cursor-pointer">
-              Import Data
-              <input type="file" accept=".json" onChange={handleImport} className="hidden" />
+              Import All Data
+              <input type="file" accept=".json" onChange={handleImportAll} className="hidden" />
             </label>
             <button
               onClick={handleClear}
               className="px-4 py-2 text-sm font-medium bg-destructive/10 text-destructive rounded-lg hover:bg-destructive/20 transition-colors"
             >
-              Clear Local Logs
+              Nuke All Local Data
             </button>
           </div>
           <p className="text-xs text-muted-foreground">

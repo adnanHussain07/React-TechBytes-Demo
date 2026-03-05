@@ -168,3 +168,31 @@ This tab provides a side-by-side comparison of **"legacy" React (Class Component
 ### How it relates to the title
 
 This tab directly demonstrates the "Legacy vs Modern" concept by providing a clear and compelling example of the evolution of React development patterns. It visually shows how modern React with hooks and context leads to cleaner, more modular, and more maintainable code.
+
+---
+
+## 🤖 Adaptive UI Agent (`/adaptive-ui`)
+
+### Concept
+
+This project features an experimental **Adaptive UI Agent** that dynamically adjusts hints and highlights based on your interaction patterns.
+
+### Key Features
+-   **Privacy-First**: No data is sent to a server. Interaction logs and predictive models stay in your `localStorage`.
+-   **Heuristic Engine**: 5+ deterministic rules that suggest features you haven't explored yet.
+-   **Predictive ML**: Markov-chain transition matrix that predicts your next likely action based on sequential habits.
+-   **Evaluation Loop**: Local tracking of hint acceptance and dismissal rates.
+
+### How to use
+1. Navigate to the **Adaptive UI** section in the sidebar.
+2. Go to the **Overview** page to select a "Sample User" (Novice/Power) and **Seed Data**.
+3. Explore other pages in the app (Async UX, Composition, etc.) to see hints/highlights in action.
+4. Visit **Insights** to see your raw interaction logs and rules engine output.
+5. Visit **Evaluation** to see performance metrics and toggle A/B variants.
+
+### Documentation
+Detailed documentation is available in `docs/adaptive-ui/`:
+- `architecture.md`
+- `rules-catalog.md`
+- `demo-script.md`
+- `knowledge-sharing-session.md`

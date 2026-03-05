@@ -1,4 +1,5 @@
 import { Rule } from './ruleTypes';
+import { predictNextUi } from '../ml/transitionModel';
 
 const DISMISS_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -35,7 +36,7 @@ export const navExploreRule: Rule = {
 export const tasksAddRule: Rule = {
   id: 'tasks-add',
   evaluate: (ctx) => {
-    if (ctx.routePath !== '/async-ux') return null; // Tasks demo is on AsyncUX page
+    if (ctx.routePath !== '/async-ux') return null;
     if (isRecentlyDismissed('hint.tasks-add', ctx.dismissedHints, ctx.nowTs)) return null;
 
     const asyncStats = ctx.model.perRoute['/async-ux'] || { visitsApprox: 0, clicks: 0 };
@@ -129,10 +130,34 @@ export const insightsOpenRule: Rule = {
   },
 };
 
+// 6. "ml.nextAction": Predictive ML rule based on transition model.
+export const mlNextActionRule: Rule = {
+  id: 'ml-next-action',
+  evaluate: (ctx) => {
+    if (isRecentlyDismissed('hint.ml-next-action', ctx.dismissedHints, ctx.nowTs)) return null;
+
+    const lastUiId = ctx.model.sequences.lastUiIds[ctx.model.sequences.lastUiIds.length - 1];
+    const predicted = predictNextUi(ctx.settings.userId, lastUiId);
+
+    if (predicted && predicted !== lastUiId) {
+      return {
+        hintId: 'hint.ml-next-action',
+        targetUiId: predicted,
+        message: `Based on your habits, you might want to use this next!`,
+        kind: 'highlight',
+        priority: 1,
+        debugInfo: `predicted from ${lastUiId}`,
+      };
+    }
+    return null;
+  },
+};
+
 export const ALL_RULES: Rule[] = [
   navExploreRule,
   tasksAddRule,
   tasksCompleteRule,
   networkSimRule,
   insightsOpenRule,
+  mlNextActionRule,
 ];

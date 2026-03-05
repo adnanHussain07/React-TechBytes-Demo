@@ -1,4 +1,5 @@
 export type TelemetryEventType = 'click' | 'hover';
+export type HintInteractionType = 'shown' | 'accepted' | 'dismissed';
 
 export interface TelemetryEvent {
   eventId: string;
@@ -15,13 +16,28 @@ export interface TelemetryEvent {
   };
 }
 
+export interface HintInteractionEvent {
+  hintId: string;
+  ts: number;
+  type: HintInteractionType;
+  targetUiId: string;
+  userId: string;
+}
+
 export interface AdaptiveUiSettings {
   enabled: boolean;
   captureHover: boolean;
   sampleMode: boolean;
   userId: string;
+  abVariant?: 'A' | 'B';
 }
 
 export interface EventStoreState {
   events: TelemetryEvent[];
+}
+
+export interface TransitionMatrix {
+  [fromUiId: string]: {
+    [toUiId: string]: number;
+  };
 }
