@@ -17,6 +17,7 @@ import AdaptiveUiLayout from './features/adaptive-ui/components/AdaptiveUiLayout
 import AdaptiveUiHomePage from './features/adaptive-ui/pages/AdaptiveUiHomePage';
 import AdaptiveUiInsightsPage from './features/adaptive-ui/pages/AdaptiveUiInsightsPage';
 import AdaptiveUiEvaluationPage from './features/adaptive-ui/pages/AdaptiveUiEvaluationPage';
+import AdaptiveUiDemoPage from './features/adaptive-ui/pages/AdaptiveUiDemoPage';
 
 function AppContent() {
   useTelemetry();
@@ -38,6 +39,7 @@ function AppContent() {
           <Route index element={<AdaptiveUiHomePage />} />
           <Route path="insights" element={<AdaptiveUiInsightsPage />} />
           <Route path="evaluation" element={<AdaptiveUiEvaluationPage />} />
+          <Route path="demo" element={<AdaptiveUiDemoPage />} />
         </Route>
       </Routes>
     </Layout>

@@ -78,7 +78,10 @@ export const AdaptiveUiProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   useEffect(() => {
     loadData();
     const handleRefresh = () => loadData();
+    
+    // Listen for manual refreshes and automated telemetry appends
     window.addEventListener('adaptive-ui-refresh', handleRefresh);
+    window.addEventListener('adaptive-ui-event-appended', handleRefresh);
     
     // Global click listener for "accepted" detection
     const handleGlobalClick = (e: MouseEvent) => {

@@ -40,6 +40,16 @@ const AdaptiveUiLayout = () => {
           >
             Evaluation
           </NavLink>
+          <NavLink
+            to="/adaptive-ui/demo"
+            className={({ isActive }) =>
+              `px-3 py-1.5 text-sm font-medium rounded-sm transition-all ${
+                isActive ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+              }`
+            }
+          >
+            Demo
+          </NavLink>
         </nav>
       </div>
       <Outlet />

@@ -18,7 +18,7 @@ export const navExploreRule: Rule = {
     const homeStats = ctx.model.perRoute['/'] || { visitsApprox: 0, clicks: 0 };
     const totalRouteClicks = Object.values(ctx.model.perRoute).reduce((acc, r) => acc + r.clicks, 0);
 
-    if (homeStats.visitsApprox >= 3 && totalRouteClicks < 5) {
+    if (homeStats.visitsApprox >= 3 && totalRouteClicks < 10) {
       return {
         hintId: 'hint.nav-explore',
         targetUiId: 'nav.async-ux',

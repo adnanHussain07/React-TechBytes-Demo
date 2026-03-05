@@ -61,6 +61,9 @@ export const appendEvent = (userId: string, event: TelemetryEvent) => {
   // Enforce max length
   const limitedEvents = events.slice(-MAX_EVENTS);
   localStorage.setItem(getEventKey(userId), JSON.stringify(limitedEvents));
+  
+  // Notify listeners (like the Provider)
+  window.dispatchEvent(new CustomEvent('adaptive-ui-event-appended', { detail: { userId, event } }));
 };
 
 export const clearEvents = (userId: string) => {
